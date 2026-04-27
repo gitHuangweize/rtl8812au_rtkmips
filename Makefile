@@ -97,7 +97,8 @@ CONFIG_RTW_SDIO_PM_KEEP_POWER = y
 ###################### MP HW TX MODE FOR VHT #######################
 CONFIG_MP_VHT_HW_TX_MODE = n
 ###################### Platform Related #######################
-CONFIG_PLATFORM_I386_PC = y
+CONFIG_PLATFORM_OPENWRT = y
+CONFIG_PLATFORM_I386_PC = n
 CONFIG_PLATFORM_ANDROID_ARM64 = n
 CONFIG_PLATFORM_ARM_RPI = n
 CONFIG_PLATFORM_ARM64_RPI = n
@@ -653,6 +654,13 @@ EXTRA_CFLAGS += -DDM_ODM_SUPPORT_TYPE=0x04
 
 ifeq ($(CONFIG_RTW_VIRTUAL_INTF), y)
 EXTRA_CFLAGS += -DRTW_VIRTUAL_INTF=1
+endif
+ifeq ($(CONFIG_PLATFORM_OPENWRT), y)
+# Cross-compile via OpenWrt build system: ARCH / CROSS_COMPILE / KSRC are
+# provided by the outer kernel Kbuild invocation (make -C $(LINUX_DIR) M=...).
+# Only define compile-time feature flags here.
+EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN
+EXTRA_CFLAGS += -DCONFIG_IOCTL_CFG80211 -DRTW_USE_CFG80211_STA_EVENT
 endif
 
 ifeq ($(CONFIG_PLATFORM_I386_PC), y)
